@@ -4,3 +4,5 @@ pdf2image
 groq
 python-dotenv
 Pillow
+sympy
+pandas
