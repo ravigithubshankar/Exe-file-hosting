@@ -86,10 +86,7 @@ def structure_diagram_text(raw_text: str) -> str:
             structured_lines.append(stripped)
 
     # Add a note for missing/unknown info
-    if diagram_detected:
-        structured_lines.append("\nNote:")
-        structured_lines.append("- Missing or unclear weights/labels marked as 'unknown'.")
-        structured_lines.append("- Structured format applied for evaluator readability.")
+    
 
     return "\n".join(structured_lines)
 
