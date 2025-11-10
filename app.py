@@ -11,7 +11,17 @@ import streamlit as st
 
 api_key = "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"  # Replace with your Groq API key
 groq_client = Groq(api_key=api_key)
-POPPLER_PATH = r"C:\Program Files\poppler-24.08.0\Library\bin" 
+#POPPLER_PATH = r"C:\Program Files\poppler-24.08.0\Library\bin" 
+import os
+import platform
+
+# Detect platform and set Poppler path
+if platform.system() == "Windows":
+    POPPLER_PATH = r"C:\Program Files\poppler-24.08.0\Library\bin"
+else:
+    # On Streamlit Cloud (Linux), poppler-utils is installed system-wide
+    POPPLER_PATH = None
+
 
 import os
 import base64
