@@ -3,7 +3,7 @@ name: Deploy Streamlit App
 on:
   push:
     branches:
-      - main  # Run the workflow when code is pushed to main branch
+      - master  # Run the workflow when code is pushed to main branch
 
 jobs:
   deploy:
