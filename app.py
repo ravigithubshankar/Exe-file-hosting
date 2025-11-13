@@ -9,7 +9,7 @@ from groq import Groq
 # -------------------- CONFIG --------------------
 import streamlit as st
 
-api_key =st.secrets["api_key"] # Replace with your Groq API key
+api_key =os.environ.get("api_key") # Replace with your Groq API key
 groq_client = Groq(api_key=api_key)
 #POPPLER_PATH = r"C:\Program Files\poppler-24.08.0\Library\bin" 
 import os
