@@ -1,0 +1,1450 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>AI Workforce Operating System — Early Access</title>
+    <meta name="description"
+        content="Build an AI workforce that runs your company. Specialized agents plan, execute, and improve across marketing, product, and operations." />
+    <style>
+        :root {
+            --bg: #070A10;
+            --panel: #0B1020;
+            --panel2: #0D1428;
+            --stroke: rgba(255, 255, 255, .08);
+            --stroke2: rgba(255, 255, 255, .12);
+            --text: rgba(255, 255, 255, .88);
+            --muted: rgba(255, 255, 255, .62);
+            --subtle: rgba(255, 255, 255, .44);
+            --brand: #7C5CFF;
+            --brand2: #2EE59D;
+            --danger: #FF4D6D;
+            --warn: #FFD166;
+            --ok: #2EE59D;
+            --shadow: 0 20px 80px rgba(0, 0, 0, .55);
+            --radius: 18px;
+            --radius2: 14px;
+            --max: 1120px;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--sans);
+            color: var(--text);
+            background:
+                radial-gradient(1200px 700px at 15% 10%, rgba(124, 92, 255, .18), transparent 55%),
+                radial-gradient(900px 600px at 80% 15%, rgba(46, 229, 157, .14), transparent 60%),
+                radial-gradient(700px 500px at 50% 80%, rgba(255, 209, 102, .08), transparent 60%),
+                var(--bg);
+            line-height: 1.35;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        .wrap {
+            max-width: var(--max);
+            margin: 0 auto;
+            padding: 0 22px;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            backdrop-filter: blur(10px);
+            background: linear-gradient(to bottom, rgba(7, 10, 16, .78), rgba(7, 10, 16, .38));
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+        }
+
+        .logo {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            font-weight: 650;
+            letter-spacing: .2px;
+        }
+
+        .mark {
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            background: conic-gradient(from 220deg, var(--brand), rgba(124, 92, 255, .2), var(--brand2));
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, .10) inset, 0 10px 40px rgba(124, 92, 255, .18);
+        }
+
+        .navlinks {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .navlinks a {
+            padding: 8px 10px;
+            border-radius: 10px;
+        }
+
+        .navlinks a:hover {
+            background: rgba(255, 255, 255, .05);
+            color: rgba(255, 255, 255, .82)
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(255, 255, 255, .04);
+            color: rgba(255, 255, 255, .86);
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: .18s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            border-color: rgba(255, 255, 255, .22);
+            background: rgba(255, 255, 255, .06)
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, rgba(124, 92, 255, .95), rgba(124, 92, 255, .55));
+            border-color: rgba(124, 92, 255, .65);
+            box-shadow: 0 18px 60px rgba(124, 92, 255, .22);
+        }
+
+        .btn.primary:hover {
+            background: linear-gradient(135deg, rgba(124, 92, 255, 1), rgba(46, 229, 157, .20))
+        }
+
+        .btn.ghost {
+            background: rgba(255, 255, 255, .03)
+        }
+
+        .pill {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            padding: 7px 10px;
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .03);
+            border-radius: 999px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--brand2);
+            box-shadow: 0 0 0 3px rgba(46, 229, 157, .12)
+        }
+
+        section {
+            padding: 78px 0
+        }
+
+        .hero {
+            padding: 56px 0 20px;
+        }
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
+            gap: 26px;
+            align-items: start;
+        }
+
+        @media (max-width: 960px) {
+            .grid2 {
+                grid-template-columns: 1fr;
+                gap: 18px
+            }
+
+            section {
+                padding: 58px 0
+            }
+
+            .navlinks {
+                display: none
+            }
+        }
+
+        h1 {
+            margin: 16px 0 10px;
+            font-size: 54px;
+            letter-spacing: -.9px;
+            line-height: 1.02;
+        }
+
+        @media (max-width: 560px) {
+            h1 {
+                font-size: 40px
+            }
+        }
+
+        .lede {
+            margin: 0;
+            color: var(--muted);
+            font-size: 18px;
+            max-width: 56ch;
+        }
+
+        .ctaRow {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 18px
+        }
+
+        .micro {
+            margin-top: 12px;
+            color: var(--subtle);
+            font-size: 13px;
+            font-family: var(--mono);
+        }
+
+        /* Dashboard mock */
+        .mock {
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: linear-gradient(180deg, rgba(13, 20, 40, .86), rgba(11, 16, 32, .66));
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .mockTop {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            color: var(--muted);
+            font-size: 12px;
+            font-family: var(--mono);
+        }
+
+        .mockBody {
+            padding: 14px
+        }
+
+        .mockRow {
+            display: grid;
+            grid-template-columns: 1.2fr .9fr;
+            gap: 12px;
+        }
+
+        .panel {
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .03);
+            border-radius: var(--radius2);
+            padding: 12px;
+        }
+
+        .panelTitle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--muted);
+            font-size: 12px;
+            font-family: var(--mono)
+        }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .kpi {
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .02);
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        .kpi .label {
+            color: var(--subtle);
+            font-size: 11px;
+            font-family: var(--mono)
+        }
+
+        .kpi .value {
+            font-size: 18px;
+            margin-top: 6px;
+            font-weight: 700;
+            letter-spacing: -.2px
+        }
+
+        .kpi .delta {
+            margin-top: 4px;
+            font-size: 11px;
+            color: rgba(46, 229, 157, .9);
+            font-family: var(--mono)
+        }
+
+        .flow {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px
+        }
+
+        .task {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .02);
+            padding: 9px 10px;
+            border-radius: 12px;
+            font-family: var(--mono);
+            font-size: 12px;
+            color: rgba(255, 255, 255, .78);
+        }
+
+        .badge {
+            padding: 5px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, .10);
+            color: rgba(255, 255, 255, .72);
+            background: rgba(255, 255, 255, .03);
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .badge.ok {
+            border-color: rgba(46, 229, 157, .35);
+            color: rgba(46, 229, 157, .9);
+            background: rgba(46, 229, 157, .08)
+        }
+
+        .badge.warn {
+            border-color: rgba(255, 209, 102, .35);
+            color: rgba(255, 209, 102, .92);
+            background: rgba(255, 209, 102, .08)
+        }
+
+        .badge.todo {
+            border-color: rgba(124, 92, 255, .35);
+            color: rgba(168, 150, 255, .95);
+            background: rgba(124, 92, 255, .10)
+        }
+
+        .miniChart {
+            height: 120px;
+            margin-top: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background:
+                linear-gradient(180deg, rgba(124, 92, 255, .18), transparent 55%),
+                radial-gradient(500px 120px at 30% 80%, rgba(46, 229, 157, .18), transparent 60%),
+                rgba(255, 255, 255, .02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spark {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .06), transparent);
+            transform: translateX(-40%);
+            animation: sweep 4s linear infinite;
+            mix-blend-mode: screen;
+        }
+
+        @keyframes sweep {
+            0% {
+                transform: translateX(-60%)
+            }
+
+            100% {
+                transform: translateX(60%)
+            }
+        }
+
+        /* Sections */
+        .secTitle {
+            font-size: 34px;
+            letter-spacing: -.5px;
+            margin: 0 0 10px;
+            line-height: 1.08;
+        }
+
+        .secSub {
+            margin: 0;
+            color: var(--muted);
+            max-width: 72ch;
+            font-size: 16px;
+        }
+
+        .cards {
+            margin-top: 22px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        @media (max-width: 960px) {
+            .cards {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .card {
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .03);
+            border-radius: var(--radius);
+            padding: 16px;
+        }
+
+        .card h3 {
+            margin: 8px 0 6px;
+            font-size: 16px
+        }
+
+        .card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px
+        }
+
+        .icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .03);
+            font-family: var(--mono);
+            color: rgba(255, 255, 255, .75);
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 22px;
+        }
+
+        @media (max-width: 960px) {
+            .split {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        @media (max-width: 960px) {
+            .steps {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .step {
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: linear-gradient(180deg, rgba(255, 255, 255, .03), rgba(255, 255, 255, .02));
+            border-radius: var(--radius);
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stepNum {
+            font-family: var(--mono);
+            color: rgba(168, 150, 255, .95);
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .step h3 {
+            margin: 0 0 8px;
+            font-size: 16px
+        }
+
+        .step ul {
+            margin: 0;
+            padding-left: 18px;
+            color: var(--muted);
+            font-size: 14px
+        }
+
+        .step li {
+            margin: 6px 0
+        }
+
+        /* Tabs */
+        .tabs {
+            margin-top: 18px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .03);
+            color: rgba(255, 255, 255, .72);
+            padding: 9px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .tab.active {
+            background: rgba(124, 92, 255, .16);
+            border-color: rgba(124, 92, 255, .35);
+            color: rgba(255, 255, 255, .86);
+        }
+
+        .tabPanel {
+            margin-top: 14px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .03);
+            border-radius: var(--radius);
+            padding: 16px;
+        }
+
+        .tabPanel .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (max-width: 960px) {
+            .tabPanel .row {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .list {
+            margin: 0;
+            padding-left: 18px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .list li {
+            margin: 6px 0
+        }
+
+        /* Comparison table */
+        table {
+            width: 100%;
+            margin-top: 18px;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .02);
+        }
+
+        th,
+        td {
+            padding: 14px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            color: rgba(255, 255, 255, .8);
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            color: rgba(255, 255, 255, .72);
+            font-family: var(--mono);
+            font-size: 12px;
+            background: rgba(255, 255, 255, .03);
+        }
+
+        tr:last-child td {
+            border-bottom: none
+        }
+
+        td.muted {
+            color: var(--muted)
+        }
+
+        td.good {
+            color: rgba(46, 229, 157, .92)
+        }
+
+        td.good strong {
+            color: rgba(46, 229, 157, .95)
+        }
+
+        /* Demo */
+        .feed {
+            margin-top: 18px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .03);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .feedTop {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            color: var(--muted);
+            font-size: 12px;
+            font-family: var(--mono);
+        }
+
+        .event {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 12px;
+            padding: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+        }
+
+        .event:last-child {
+            border-bottom: none
+        }
+
+        .ts {
+            color: var(--subtle);
+            font-family: var(--mono);
+            font-size: 12px
+        }
+
+        .evtTitle {
+            margin: 0;
+            font-size: 14px
+        }
+
+        .evtBody {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 14px
+        }
+
+        .code {
+            margin-top: 10px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(0, 0, 0, .22);
+            font-family: var(--mono);
+            font-size: 12px;
+            color: rgba(255, 255, 255, .76);
+            overflow: auto;
+            white-space: pre;
+        }
+
+        /* Form */
+        .formCard {
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: linear-gradient(180deg, rgba(124, 92, 255, .10), rgba(255, 255, 255, .03));
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, .35);
+        }
+
+        .formCard h3 {
+            margin: 0 0 6px
+        }
+
+        .formCard p {
+            margin: 0 0 14px;
+            color: var(--muted);
+            font-size: 14px
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 6px;
+            color: rgba(255, 255, 255, .72);
+            font-size: 12px;
+            font-family: var(--mono)
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 11px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(0, 0, 0, .18);
+            color: rgba(255, 255, 255, .86);
+            outline: none;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: rgba(124, 92, 255, .55);
+            box-shadow: 0 0 0 4px rgba(124, 92, 255, .12)
+        }
+
+        .formGrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 560px) {
+            .formGrid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .smallprint {
+            margin-top: 10px;
+            color: var(--subtle);
+            font-size: 12px;
+        }
+
+        footer {
+            padding: 44px 0 70px;
+            border-top: 1px solid rgba(255, 255, 255, .06);
+            background: rgba(0, 0, 0, .12);
+        }
+
+        .footerRow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="wrap">
+            <div class="nav">
+                <div class="logo">
+                    <div class="mark"></div>
+                    <div>Autonomous Org</div>
+                    <span class="pill"><span class="dot"></span> Early access</span>
+                </div>
+                <nav class="navlinks" aria-label="Primary">
+                    <a href="#problem">Problem</a>
+                    <a href="#solution">Solution</a>
+                    <a href="#agents">Agents</a>
+                    <a href="#usecases">Use-cases</a>
+                    <a href="#demo">Demo</a>
+                    <a href="#waitlist">Waitlist</a>
+                </nav>
+                <a class="btn primary" href="#waitlist">Join early access</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <div class="grid2">
+                <div>
+                    <span class="pill">AI workforce • Operating system • Decision engine</span>
+                    <h1>Not another AI tool.<br />A self-operating business system.</h1>
+                    <p class="lede">
+                        Deploy specialized AI agents that plan, execute, and grow your business automatically—across
+                        marketing, product, and operations.
+                    </p>
+                    <div class="ctaRow">
+                        <a class="btn primary" href="#waitlist">Join early access</a>
+                        <a class="btn ghost" href="#demo">Watch demo</a>
+                    </div>
+                    <div class="micro">
+                        Set goals once → agents coordinate work → weekly ROI reporting.
+                    </div>
+                </div>
+
+                <!-- Mock dashboard visual -->
+                <div class="mock" aria-label="Agent dashboard mock">
+                    <div class="mockTop">
+                        <div>Agent OS / Dashboard</div>
+                        <div>Memory: institutional • Mode: autonomous</div>
+                    </div>
+                    <div class="mockBody">
+                        <div class="mockRow">
+                            <div class="panel">
+                                <div class="panelTitle">
+                                    <span>Business KPIs</span>
+                                    <span class="badge ok">improving</span>
+                                </div>
+                                <div class="kpis">
+                                    <div class="kpi">
+                                        <div class="label">Pipeline</div>
+                                        <div class="value">$128k</div>
+                                        <div class="delta">+21% WoW</div>
+                                    </div>
+                                    <div class="kpi">
+                                        <div class="label">CAC</div>
+                                        <div class="value">$92</div>
+                                        <div class="delta">-14% WoW</div>
+                                    </div>
+                                    <div class="kpi">
+                                        <div class="label">Activation</div>
+                                        <div class="value">34%</div>
+                                        <div class="delta">+6.2 pts</div>
+                                    </div>
+                                </div>
+                                <div class="miniChart">
+                                    <div class="spark"></div>
+                                </div>
+                            </div>
+
+                            <div class="panel">
+                                <div class="panelTitle">
+                                    <span>Task flow</span>
+                                    <span class="badge warn">running</span>
+                                </div>
+                                <div class="flow">
+                                    <div class="task">
+                                        <span>Detect SEO gap: “ai onboarding checklist”</span>
+                                        <span class="badge ok">done</span>
+                                    </div>
+                                    <div class="task">
+                                        <span>Ship landing page experiment v2</span>
+                                        <span class="badge warn">in test</span>
+                                    </div>
+                                    <div class="task">
+                                        <span>Create campaign + 12 creatives</span>
+                                        <span class="badge todo">queued</span>
+                                    </div>
+                                    <div class="task">
+                                        <span>Report ROI + next actions</span>
+                                        <span class="badge todo">scheduled</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel" style="margin-top:12px">
+                            <div class="panelTitle">
+                                <span>Agents online</span>
+                                <span class="badge">6 active</span>
+                            </div>
+                            <div class="flow">
+                                <div class="task"><span>Growth Strategist</span><span class="badge ok">planning</span>
+                                </div>
+                                <div class="task"><span>Content Lead</span><span class="badge ok">writing</span></div>
+                                <div class="task"><span>Ads Optimizer</span><span class="badge warn">learning</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PROBLEM -->
+    <section id="problem">
+        <div class="wrap">
+            <h2 class="secTitle">AI tools are powerful. But they don’t run businesses.</h2>
+            <p class="secSub">
+                Teams still coordinate work manually, rebuild context every day, and make growth decisions the hard way.
+            </p>
+
+            <div class="cards">
+                <div class="card">
+                    <div class="icon">01</div>
+                    <h3>Chatbots don’t keep institutional memory</h3>
+                    <p>Context resets, decisions aren’t retained, and strategy drifts over time.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">02</div>
+                    <h3>Automation tools require constant setup</h3>
+                    <p>Workflows break, edge cases pile up, and “maintenance” becomes the job.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">03</div>
+                    <h3>Teams spend time coordinating work</h3>
+                    <p>Status updates, handoffs, and project management become the bottleneck.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">04</div>
+                    <h3>Growth decisions stay manual</h3>
+                    <p>Experiment selection, prioritization, and reporting aren’t closed-loop.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">05</div>
+                    <h3>Execution is separated from strategy</h3>
+                    <p>Plans don’t automatically become tasks—and tasks don’t learn from results.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">06</div>
+                    <h3>Tools don’t behave like a company</h3>
+                    <p>You need a coordinated organization, not a pile of apps.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOLUTION -->
+    <section id="solution">
+        <div class="wrap">
+            <h2 class="secTitle">A system where specialized AI agents work together like a real company team.</h2>
+            <p class="secSub">
+                One shared brain, clear roles, autonomous execution, and continuous improvement—so your business
+                compounds.
+            </p>
+
+            <div class="split">
+                <div class="card">
+                    <div class="icon">Agents</div>
+                    <h3>Role-based specialists</h3>
+                    <p>Each agent owns outcomes (pipeline, activation, conversion, retention)—not just tasks.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">Flow</div>
+                    <h3>Strategy → execution → learning</h3>
+                    <p>Plans turn into tasks, tasks ship work, and results update the roadmap automatically.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">Memory</div>
+                    <h3>Institutional memory</h3>
+                    <p>Decisions, experiments, and results persist—so the system gets sharper over time.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">ROI</div>
+                    <h3>Business reporting</h3>
+                    <p>Weekly reports: what shipped, what moved metrics, what’s next, and why.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how">
+        <div class="wrap">
+            <h2 class="secTitle">How it works</h2>
+            <p class="secSub">Three steps. Clear accountability. Compounding output.</p>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="stepNum">STEP 1</div>
+                    <h3>Set goals</h3>
+                    <ul>
+                        <li>growth</li>
+                        <li>product</li>
+                        <li>revenue</li>
+                    </ul>
+                </div>
+                <div class="step">
+                    <div class="stepNum">STEP 2</div>
+                    <h3>AI team plans</h3>
+                    <ul>
+                        <li>roadmap</li>
+                        <li>tasks</li>
+                        <li>experiments</li>
+                    </ul>
+                </div>
+                <div class="step">
+                    <div class="stepNum">STEP 3</div>
+                    <h3>Agents execute</h3>
+                    <ul>
+                        <li>marketing</li>
+                        <li>research</li>
+                        <li>development</li>
+                        <li>optimization</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AGENT SHOWCASE -->
+    <section id="agents">
+        <div class="wrap">
+            <h2 class="secTitle">Meet the AI team</h2>
+            <p class="secSub">People don’t buy “AI.” They buy who does what—and what outcome they get.</p>
+
+            <div class="cards">
+                <div class="card">
+                    <div class="icon">GS</div>
+                    <h3>Growth Strategist</h3>
+                    <p>Builds the weekly plan that moves pipeline, activation, and retention.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">CL</div>
+                    <h3>Content Lead</h3>
+                    <p>Ships content systems: SEO pages, narratives, campaigns, and distribution.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">PA</div>
+                    <h3>Product Analyst</h3>
+                    <p>Finds friction, defines experiments, and tracks what changes behavior.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">AO</div>
+                    <h3>Ads Optimizer</h3>
+                    <p>Creates campaigns, generates creatives, tests audiences, reduces CAC.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">RA</div>
+                    <h3>Research Agent</h3>
+                    <p>Maps market opportunities, competitors, and positioning continuously.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">DA</div>
+                    <h3>Developer Assistant</h3>
+                    <p>Turns planned work into shipped changes, integrations, and iterations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- USE CASES -->
+    <section id="usecases">
+        <div class="wrap">
+            <h2 class="secTitle">Use-cases</h2>
+            <p class="secSub">Same platform. Different teams. Clear outcomes.</p>
+
+            <div class="tabs" role="tablist" aria-label="Use-cases tabs">
+                <div class="tab active" data-tab="saas" role="tab" aria-selected="true">SaaS teams</div>
+                <div class="tab" data-tab="agencies" role="tab" aria-selected="false">Agencies</div>
+                <div class="tab" data-tab="ecom" role="tab" aria-selected="false">Ecommerce</div>
+                <div class="tab" data-tab="founders" role="tab" aria-selected="false">Founders</div>
+                <div class="tab" data-tab="startups" role="tab" aria-selected="false">Startups</div>
+            </div>
+
+            <div class="tabPanel" id="tabPanel">
+                <div class="row">
+                    <div>
+                        <h3 style="margin:0 0 6px">What they get</h3>
+                        <ul class="list">
+                            <li>Experiment pipeline that ships every week</li>
+                            <li>Content + paid loops that learn from CAC and activation</li>
+                            <li>Institutional memory of what worked (and why)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="margin:0 0 6px">Problems solved</h3>
+                        <ul class="list">
+                            <li>Too many ideas, not enough execution</li>
+                            <li>Manual reporting and “growth guessing”</li>
+                            <li>Tool sprawl without accountability</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- DIFFERENTIATORS -->
+    <section id="diff">
+        <div class="wrap">
+            <h2 class="secTitle">Why it’s better than tools</h2>
+            <p class="secSub">Tools help you do tasks. This runs systems.</p>
+
+            <table aria-label="Differentiator table">
+                <thead>
+                    <tr>
+                        <th>Tools</th>
+                        <th>Your Platform</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="muted">Chat</td>
+                        <td class="good"><strong>Autonomous teams</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="muted">Tasks</td>
+                        <td class="good"><strong>Strategy + execution</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="muted">Memory limited</td>
+                        <td class="good"><strong>Institutional memory</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="muted">Manual workflows</td>
+                        <td class="good"><strong>Self-operating systems</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- DEMO / SIMULATION -->
+    <section id="demo">
+        <div class="wrap">
+            <h2 class="secTitle">Demo simulation</h2>
+            <p class="secSub">Even without full product access, you can see the closed-loop: detect → execute → report
+                ROI.</p>
+
+            <div class="feed">
+                <div class="feedTop">
+                    <div>Live activity</div>
+                    <div>Autonomy: ON • Human approvals: configurable</div>
+                </div>
+
+                <div class="event">
+                    <div class="ts">09:12</div>
+                    <div>
+                        <p class="evtTitle"><strong>Agent detects opportunity</strong>: “High-intent SEO cluster
+                            missing”</p>
+                        <p class="evtBody">Research Agent finds 38 keywords with buyer intent + low competition. Growth
+                            Strategist prioritizes top 8.</p>
+                        <div class="code">Output: Proposed content roadmap
+                            - 8 pages (bottom-funnel)
+                            - 2 comparison pages
+                            - 1 onboarding playbook
+                            Expected impact: +12–18% qualified traffic in 30 days</div>
+                    </div>
+                </div>
+
+                <div class="event">
+                    <div class="ts">11:05</div>
+                    <div>
+                        <p class="evtTitle"><strong>Agent creates campaign</strong>: “Activation lift experiment”</p>
+                        <p class="evtBody">Content Lead drafts the offer. Ads Optimizer generates 12 creatives + 3
+                            audiences. Product Analyst defines success metric.</p>
+                        <div class="code">Experiment: Onboarding nudge v3
+                            Metric: Activation rate
+                            Variant: Simplified setup + proof module
+                            Run time: 7 days
+                            Decision rule: +3.0 pts activation OR stop</div>
+                    </div>
+                </div>
+
+                <div class="event">
+                    <div class="ts">17:40</div>
+                    <div>
+                        <p class="evtTitle"><strong>Agent reports ROI</strong>: “What shipped + what moved metrics”</p>
+                        <p class="evtBody">Weekly report summarizes outputs, metric movement, and next actions
+                            automatically.</p>
+                        <div class="code">Weekly summary
+                            Shipped: 4 pages, 1 paid experiment, 2 onboarding tweaks
+                            Moved: Activation +2.1 pts, CAC -9%, Pipeline +$22k
+                            Next: Scale winning audience, ship page template v2</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SOCIAL PROOF -->
+    <section id="proof">
+        <div class="wrap">
+            <h2 class="secTitle">Social proof (pre-product)</h2>
+            <p class="secSub">
+                Replace the placeholders below with real signals: prototype screenshots, advisor logos, waitlist count,
+                or a founder narrative.
+            </p>
+
+            <div class="split">
+                <div class="card">
+                    <div class="icon">FYI</div>
+                    <h3>Founder story</h3>
+                    <p>
+                        “We built this because tools don’t create accountability. Businesses need an operating system
+                        that
+                        plans and executes—then learns from outcomes.”
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="icon">WL</div>
+                    <h3>Waitlist momentum</h3>
+                    <p><span style="color:rgba(46,229,157,.92); font-weight:700">Example:</span> 1,482 operators on the
+                        waitlist • 37% from SaaS • 22% agencies.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">PX</div>
+                    <h3>Design prototypes</h3>
+                    <p>Add screenshots of the dashboard, agent cards, and reporting view to increase conversion.</p>
+                </div>
+                <div class="card">
+                    <div class="icon">ADV</div>
+                    <h3>Advisors / operators</h3>
+                    <p>Even 2–3 credible names or short quotes can dramatically increase trust.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VISION -->
+    <section id="vision">
+        <div class="wrap">
+            <h2 class="secTitle">You’re not building assistants. You’re building companies.</h2>
+            <p class="secSub">
+                Today: AI assistants. Tomorrow: AI teams. Next: autonomous companies. This platform is the bridge to the
+                third.
+            </p>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="stepNum">TODAY</div>
+                    <h3>AI assistants</h3>
+                    <ul>
+                        <li>answer questions</li>
+                        <li>help with tasks</li>
+                        <li>require direction</li>
+                    </ul>
+                </div>
+                <div class="step">
+                    <div class="stepNum">TOMORROW</div>
+                    <h3>AI teams</h3>
+                    <ul>
+                        <li>coordinate roles</li>
+                        <li>share memory</li>
+                        <li>run workflows</li>
+                    </ul>
+                </div>
+                <div class="step">
+                    <div class="stepNum">NEXT</div>
+                    <h3>Autonomous companies</h3>
+                    <ul>
+                        <li>set objectives</li>
+                        <li>ship continuously</li>
+                        <li>optimize for ROI</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WAITLIST (Conversion goal) -->
+    <section id="waitlist">
+        <div class="wrap">
+            <div class="grid2">
+                <div>
+                    <h2 class="secTitle">Get early access</h2>
+                    <p class="secSub">
+                        Tell us your role, company type, and biggest bottleneck. We’ll tailor the first agent team to
+                        your use-case.
+                    </p>
+
+                    <div class="cards" style="grid-template-columns:1fr; margin-top:18px">
+                        <div class="card">
+                            <h3 style="margin:0 0 6px">What you’ll receive</h3>
+                            <p style="margin:0; color:var(--muted)">
+                                A suggested agent lineup + a 30-day execution plan based on your inputs (role, company
+                                type, biggest problem).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="formCard">
+                    <h3>Join the waitlist</h3>
+                    <p>High-signal operators get priority invites.</p>
+
+                    <!-- Replace action with your backend endpoint -->
+                    <form
+                        onsubmit="event.preventDefault(); alert('Captured locally (demo). Connect this to your backend.');">
+                        <div class="formGrid">
+                            <div>
+                                <label for="role">Role</label>
+                                <select id="role" required>
+                                    <option value="" selected disabled>Select…</option>
+                                    <option>Founder / CEO</option>
+                                    <option>Growth</option>
+                                    <option>Marketing</option>
+                                    <option>Product</option>
+                                    <option>Ops</option>
+                                    <option>Engineering</option>
+                                    <option>Agency owner</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="company">Company type</label>
+                                <select id="company" required>
+                                    <option value="" selected disabled>Select…</option>
+                                    <option>SaaS</option>
+                                    <option>Agency</option>
+                                    <option>Ecommerce</option>
+                                    <option>Startup (pre-PMF)</option>
+                                    <option>Startup (post-PMF)</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <label for="problem">Biggest problem</label>
+                        <select id="problem" required>
+                            <option value="" selected disabled>Select…</option>
+                            <option>Need more pipeline / leads</option>
+                            <option>CAC too high</option>
+                            <option>Activation / conversion is weak</option>
+                            <option>Retention / churn</option>
+                            <option>Too many ideas, not enough execution</option>
+                            <option>Team coordination overhead</option>
+                        </select>
+
+                        <label for="email">Email</label>
+                        <input id="email" type="email" placeholder="you@company.com" required />
+
+                        <label for="notes">Use-case interest (optional)</label>
+                        <textarea id="notes" placeholder="What would you want the AI team to run first?"></textarea>
+
+                        <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap">
+                            <button class="btn primary" type="submit">Join early access</button>
+                            <a class="btn ghost" href="#demo">Watch demo</a>
+                        </div>
+
+                        <div class="smallprint">
+                            By joining, you agree to receive product updates. No spam. Unsubscribe anytime.
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER CTA -->
+    <footer>
+        <div class="wrap">
+            <div class="footerRow">
+                <div class="logo">
+                    <div class="mark"></div>
+                    <div>
+                        <div style="font-weight:650">Autonomous Org</div>
+                        <div style="color:var(--subtle); font-size:12px; margin-top:3px; font-family:var(--mono)">
+                            AI workforce operating system
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap">
+                    <a class="btn primary" href="#waitlist">Become a founding user</a>
+                    <a class="btn ghost" href="#problem">Back to top</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const copy = {
+            saas: {
+                get: [
+                    "Experiment pipeline that ships every week",
+                    "Content + paid loops that learn from CAC and activation",
+                    "Institutional memory of what worked (and why)"
+                ],
+                solve: [
+                    "Too many ideas, not enough execution",
+                    "Manual reporting and “growth guessing”",
+                    "Tool sprawl without accountability"
+                ]
+            },
+            agencies: {
+                get: [
+                    "Agent teams per client (consistent playbooks)",
+                    "Faster research → strategy → creative production",
+                    "Weekly client-ready reporting automatically"
+                ],
+                solve: [
+                    "Time lost in coordination and revisions",
+                    "Inconsistent results across accounts",
+                    "Hard to scale delivery without hiring"
+                ]
+            },
+            ecom: {
+                get: [
+                    "Creative testing machine for ads",
+                    "Lifecycle messaging + offer experiments",
+                    "SKU-level performance insights"
+                ],
+                solve: [
+                    "Creative fatigue and unstable ROAS",
+                    "Manual segmentation and campaign tuning",
+                    "Slow testing cycles"
+                ]
+            },
+            founders: {
+                get: [
+                    "A full team that executes while you focus on direction",
+                    "Prioritized roadmap based on outcomes",
+                    "Weekly “what changed metrics” report"
+                ],
+                solve: [
+                    "You do everything yourself",
+                    "Hard to know what matters most",
+                    "Execution stalls between ideas and shipping"
+                ]
+            },
+            startups: {
+                get: [
+                    "Structured growth + product loops",
+                    "Faster learning cycles from experiments",
+                    "Shared memory so the org compounds"
+                ],
+                solve: [
+                    "Chaotic priorities",
+                    "Unclear ownership of outcomes",
+                    "Manual planning and reporting overhead"
+                ]
+            }
+        };
+
+        function renderPanel(key) {
+            const panel = document.getElementById("tabPanel");
+            panel.innerHTML = `
+        <div class="row">
+          <div>
+            <h3 style="margin:0 0 6px">What they get</h3>
+            <ul class="list">
+              ${copy[key].get.map(x => `<li>${x}</li>`).join("")}
+            </ul>
+          </div>
+          <div>
+            <h3 style="margin:0 0 6px">Problems solved</h3>
+            <ul class="list">
+              ${copy[key].solve.map(x => `<li>${x}</li>`).join("")}
+            </ul>
+          </div>
+        </div>`;
+        }
+
+        document.querySelectorAll(".tab").forEach(t => {
+            t.addEventListener("click", () => {
+                document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+                t.classList.add("active");
+                renderPanel(t.dataset.tab);
+            });
+        });
+    </script>
+</body>
+
+</html>
